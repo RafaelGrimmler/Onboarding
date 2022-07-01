@@ -8,6 +8,7 @@ import { StudentsModule } from './modules/students/students.module';
 import { DisciplinesModule } from './modules/disciplines/disciplines.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { ContentsModule } from './modules/contents/contents.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,13 +17,16 @@ import { ContentsModule } from './modules/contents/contents.module';
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
     }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5433,
-      username: 'postgres',
-      password: 'docker',
-      database: 'postgres',
+      host: process.env.TYPEORM_HOST,
+      port: +process.env.TYPEORM_PORT,
+      username: process.env.TYPEORM_USER,
+      password: process.env.TYPEORM_PASSWORD,
+      database: process.env.TYPEORM_DATABASE,
       entities: [__dirname + '/modules/**/entities/*.js'],
       synchronize: true,
     }),
